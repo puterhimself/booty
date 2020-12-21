@@ -1,28 +1,25 @@
 import os
-import telegram
+import sys
 import yaml
-from telegram.ext import Updater 
+import telegram
+from telegram.ext import Updater
 from binance.client import Client
-from binance_f import RequestClient as Fut
 from binance_f.base.printobject import *
+from binance_f import RequestClient as Fut
+from binance.websockets import BinanceSocketManager as Socks
 
 
 class Configuration():
 
     def __init__(self):
-
-        with open('userData/config/config.yml', 'r') as config_file:
+        cFile = os.path.join(sys.path[0], 'userData', 'config/config.yml')
+        with open(cFile, 'r') as config_file:
             default_config = yaml.load(config_file)
-
-        if os.path.isfile('defaults.yml'):
-            with open('config.yml', 'r') as config_file:
-                user_config = yaml.load(config_file)
-        else:
-            user_config = dict()
 
         self.settings = default_config['Settings']
         self.Telegram = default_config['Telegram']
         self.bot = {k: telegram.Bot(token=v) for k, v in self.Telegram['bots'].items()}
+        self.commander = {k: Updater(token=v, use_context=True) for k, v in self.Telegram['bots'].items()}
 
         if 'scrips' in self.settings:
             self.scrips = self.settings['scrips']
@@ -30,7 +27,6 @@ class Configuration():
         if 'stratsFolder' in self.settings: 
             self.stratFolder = self.settings['stratsFolder']
             self.stratFolder = self.stratFolder.replace('/', '.')
-
 
         if 'Exchange' in default_config:
             self.Exchange = default_config['Exchange']['binance']
@@ -50,9 +46,14 @@ class Configuration():
             mod = __import__(self.stratFolder, fromlist=self.modclass.keys())
             self.Strats = {strat : getattr(getattr(mod, strat), strat) for strat in self.modclass.keys()}
 
+        if 'PriceAlerts' in default_config:
+            self.Ticker = default_config['PriceAlerts']['dayTicker']
+            self.Trade = default_config['PriceAlerts']['Depth']
+            self.Depth = default_config['PriceAlerts']['Trade']
+
+        self.sock = Socks(self.SpotClient)
+        self.conns = {}
 
 
 if __name__ == "__main__":
-    c = Configuration()
-    obj = c.Strats['MA']
-    print(obj.stoploss)
+    print(sys.path)

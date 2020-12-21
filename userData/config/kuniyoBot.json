@@ -1,0 +1,96 @@
+{
+    "max_open_trades": -1,
+    "stake_currency": "USDT",
+    "stake_amount": "unlimited",
+    "tradable_balance_ratio": 0.75,
+    "fiat_display_currency": "USD",
+    "timeframe": "15m",
+    "dry_run": true,
+    "dry_run_wallet": 2000,
+    "cancel_open_orders_on_exit": false,
+    "process_only_new_candles": true,
+
+    "trailing_stop": false,
+    "unfilledtimeout": {
+        "buy": 60,
+        "sell": 60
+    },
+    
+    "bid_strategy": {
+        "price_side": "bid",
+        "use_order_book": false,
+        "ask_last_balance": 0.0,
+        "order_book_top": 1,
+        "check_depth_of_market": {
+            "enabled": false,
+            "bids_to_ask_delta": 1
+        }
+    },
+    "ask_strategy":{
+        "price_side": "ask",
+        "use_order_book": false,
+        "order_book_min": 1,
+        "order_book_max": 1,
+        "use_sell_signal": true,
+        "sell_profit_only": false,
+        "ignore_roi_if_buy_signal": true
+    },
+
+    "order_types": {
+        "buy": "limit",
+        "sell": "limit",
+        "emergencysell": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60
+    },
+    "order_time_in_force": {
+        "buy": "gtc",
+        "sell": "gtc"
+    },
+
+    "telegram": {
+        "enabled": true,
+        "token": "1476137551:AAFHXuxExb3Vno0J3v18hPXJ71Dj3EPXxUA",
+        "chat_id": "1138730714",
+        "notification_settings": {
+           "status": "on",
+           "warning": "on",
+           "startup": "on",
+           "buy": "on",
+           "sell": "on",
+           "buy_cancel": "on",
+           "sell_cancel": "on"
+        }
+     },  
+
+    "edge": {
+        "enabled": true,
+        "process_throttle_secs": 600,
+        "calculate_since_number_of_days": 5,
+        "allowed_risk": 0.02,
+        "stoploss_range_min": -0.01,
+        "stoploss_range_max": -0.1,
+        "stoploss_range_step": -0.02,
+        "minimum_winrate": 0.75,
+        "minimum_expectancy": 0.15,
+        "min_trade_number": 10,
+        "max_trade_duration_minute": 600,
+        "remove_pumps": false
+    },
+
+    "exchange": {
+        "name": "binance",
+        "key": "b9OGuBjcd7MSFV9m6gK0kDHaOAE5OzaV9xttKXx8QGoTY5z8wXgBAUZGyiVCPKZ7",
+        "secret": "nESexYFYgnpWQF3IXWESrMJ5ezOLjwwOOt2gLqrwHdDd7tSNlc1hMkD7dp7VSaUc",
+        "ccxt_config": {"enableRateLimit": true},
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 500
+        },
+        "pair_whitelist": ["BCH/USDT", "LINK/USDT", "LTC/USDT", "DOT/USDT", "ETH/USDT", "XRP/USDT", "DASH/USDT", "TRX/USDT", "EOS/USDT", "BNB/USDT", "LEND/USDT", "SNX/USDT", "SXP/USDT", "THETA/USDT", "FIL/USDT"]
+    },
+    "pairlists": [
+        {"method": "StaticPairList"}
+    ]    
+}

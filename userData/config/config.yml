@@ -1,0 +1,58 @@
+Settings:
+  stratsFolder: userData/strategies
+  scrips:
+    - BTCUSDT
+    # - BCHUSDT
+    # - LINKUSDT
+    # - LTCUSDT
+    # - ETHUSDT
+    # - XMRUSDT
+    # - ADAUSDT
+    # - BNBUSDT
+    # - DOTUSDT
+    # - EOSUSDT
+    # - SUSHIUSDT
+    # - HNTUSDT
+    # - KAVAUSDT
+
+Exchange:
+  binance:
+    # api: kHrCX5BLeGWsVxUbgrbASZTUqgnDKUP2ahIBujlC4b1ZfjtqyS64H2y8bdLcs7kY
+    api: E64PHR7IJTSTKS9E7GhGXMxtUy7XKlXIexBEiZnFj5LuAO4z1MZWVoghiArJA6Ry
+    # secret: zsZJ5IpsCcjo7YulQZsfLDNvuYe4bAhBRc4oRWThVGi2xT1y35T93Hhlx6u8Spgu
+    secret: m2u9fzVtb1qZ4spQRkLELG1Fa3eZdpcQX5AQfzj0UTiubgDiSBXFP32LLxDkxxJe
+
+Telegram:
+  users:
+    sumit: 1443973207
+    kuniyo: 1138730714
+  bots:
+    paisheeBot: 1484269540:AAGeVHH_M-ARL4GJDtQ-Snu8shp717VQQ4c
+    kuniyoBot: 1476137551:AAFHXuxExb3Vno0J3v18hPXJ71Dj3EPXxUA
+
+# scope is for scrips to consider for starts
+# which can be default, custom, all
+# client spot or futures
+Strats:
+  MA:
+    T: 15min
+    bot: paisheeBot
+    From: 2
+    refresh: 2
+    interval: 15m
+    scope: default
+
+PriceAlerts:
+  dayTicker:
+    default:
+      p: 1
+      P: 5
+      w: 5
+      x: 5
+      Q: 10
+      v: 100000
+      O: 12
+      C: 12
+      n: 100
+  Depth: null
+  Trade: null

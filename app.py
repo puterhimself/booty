@@ -1,18 +1,13 @@
-from alert import Alerts
-from conf import Configuration
-from conf import Configuration
-from parsers import StrategyParse
+from parsers import parse
 from datahandler import dataHandler
-
+from commander import Commander
 
 def main():
-    config = Configuration()
-    handle = dataHandler()
-    alerts = Alerts()
+    data = dataHandler()
+    parser = parse(data)
+    parser.run()
+    commander = Commander(data)
 
-    for k, v in config.modclass.items():
-        parseStrats = StrategyParse(config.Strats[k], v)
-        parseStrats.sock.start()
 
 if __name__ == "__main__":
     main()

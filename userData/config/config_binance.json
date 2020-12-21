@@ -1,0 +1,60 @@
+{
+    "max_open_trades": -1,
+    "stake_currency": "USDT",
+    "stake_amount": 2000,
+    "tradable_balance_ratio": 0.75,
+    "fiat_display_currency": "USD",
+    "timeframe": "15m",
+    "dry_run": true,
+    "dry_run_wallet": 2000,
+    "cancel_open_orders_on_exit": false,
+    "process_only_new_candles": true,
+
+    "trailing_stop": false,
+    "unfilledtimeout": {
+        "buy": 60,
+        "sell": 60
+    },
+    "order_types": {
+        "buy": "limit",
+        "sell": "limit",
+        "emergencysell": "market",
+        "stoploss": "market",
+        "stoploss_on_exchange": false,
+        "stoploss_on_exchange_interval": 60
+    },
+    "order_time_in_force": {
+        "buy": "gtc",
+        "sell": "gtc"
+    },
+
+    "edge": {
+        "enabled": true,
+        "process_throttle_secs": 600,
+        "calculate_since_number_of_days": 5,
+        "allowed_risk": 0.02,
+        "stoploss_range_min": -0.01,
+        "stoploss_range_max": -0.1,
+        "stoploss_range_step": -0.02,
+        "minimum_winrate": 0.75,
+        "minimum_expectancy": 0.15,
+        "min_trade_number": 10,
+        "max_trade_duration_minute": 600,
+        "remove_pumps": false
+    },
+
+    "exchange": {
+        "name": "binance",
+        "key": "kHrCX5BLeGWsVxUbgrbASZTUqgnDKUP2ahIBujlC4b1ZfjtqyS64H2y8bdLcs7kY",
+        "secret": "zsZJ5IpsCcjo7YulQZsfLDNvuYe4bAhBRc4oRWThVGi2xT1y35T93Hhlx6u8Spgu",
+        "ccxt_config": {"enableRateLimit": true},
+        "ccxt_async_config": {
+            "enableRateLimit": true,
+            "rateLimit": 500
+        },
+        "pair_whitelist": ["BCH/USDT", "LINK/USDT", "LTC/USDT", "DOT/USDT", "ETH/USDT", "XRP/USDT", "DASH/USDT", "TRX/USDT", "EOS/USDT", "BNB/USDT", "LEND/USDT", "SNX/USDT", "SXP/USDT", "THETA/USDT", "FIL/USDT"]
+    },
+    "pairlists": [
+        {"method": "StaticPairList"}
+    ]    
+}
