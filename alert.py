@@ -1,31 +1,38 @@
+import time
+import numpy as np
 from conf import Configuration
+
 
 class Alerts(Configuration):
 
     def __init__(self):
-        pass
+        super().__init__()
 
-    def priceAlerts(self, scrip, zones, template=None):
-        """
-        parse from yml file price alerts for scrips
-        """
-        pass
+    def priceAlerts(self, scrip, zones, template=None):pass
+    def volAlerts(self, scrip, range, timeframe):pass    
+    
+    def flock(self, bot, txt):
+        for _, id in self.Telegram['users'].items():
+            bot.send_message(chat_id=id, text=txt)
+            time.sleep(0.05)
+            
 
-    def stratsAlerts(self, k, df, bot):
-        text = 'got in {}'.format(k)
-        bot.send_message(chat_id=1443973207, text=text)
+    def stratsAlerts(self, data, meta):
+        bot = self.bot[meta['bot']]
+        for scrip, df in data.items():
 
-        if df['buy'].iloc[-1] == 1:
-            text = 'buy triggered for {}'.format(k)
-            bot.send_message(chat_id=1443973207, text=text)
-        
-        if df['sell'].iloc[-1] == 1:
-            text = 'sell triggered for {}'.format(k)
-            self.bot['paisheeBot'].send_message(chat_id=1443973207, text=text)
+            if 1 in df['buy'].iloc[-3:]:
+                text = 'buy triggered for {}'.format(scrip)
+                self.flock(bot, text)
+            
+            if 1 in df['sell'].iloc[-3:]:
+                text = 'sell triggered for {}'.format(scrip)
+                self.flock(bot, text)
 
 
-    def volAlerts(self, scrip, range, timeframe):
-        """
-        volitility alerts
-        """
-        pass
+    def stratHelper(self, data, meta):
+        bot = self.bot[meta['bot']]
+        for scrip, df in data.items():
+            check = df.iloc[-1]
+            if np.abs(check['Change']) >= 1:
+                self.flock(bot=bot, txt='{} change: {}'.format(scrip, check['Change']))

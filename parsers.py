@@ -13,7 +13,7 @@ class StrategyParse(Configuration):
     
     def __init__(self, Strategy, metadata):
         super().__init__()
-        self.handle = dataHandler()
+        # self.handle = dataHandler()
         self.alerts = Alerts()
         self.Strategy = Strategy
         self.metadata = metadata
