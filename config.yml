@@ -1,0 +1,41 @@
+data:
+  _dburl: mongodb+srv://puter:q1w2e3r4t5@firstborn.v2kpx.mongodb.net/<dbname>?retryWrites=true&w=majority
+  _datadir: userdata/data
+  _stratdir: userdata/strategies
+
+
+log:
+  file: userdata/logs/ver_1.log
+  level: DEBUG
+
+exchange:
+  ws: binance.com
+  binance:
+    # api: kHrCX5BLeGWsVxUbgrbASZTUqgnDKUP2ahIBujlC4b1ZfjtqyS64H2y8bdLcs7kY
+    api: E64PHR7IJTSTKS9E7GhGXMxtUy7XKlXIexBEiZnFj5LuAO4z1MZWVoghiArJA6Ry
+    # secret: zsZJ5IpsCcjo7YulQZsfLDNvuYe4bAhBRc4oRWThVGi2xT1y35T93Hhlx6u8Spgu
+    secret: m2u9fzVtb1qZ4spQRkLELG1Fa3eZdpcQX5AQfzj0UTiubgDiSBXFP32LLxDkxxJe
+
+alerts:
+  
+  strategies: all
+    # - MA
+    # - TDSequentialStrategy
+  
+  price:
+    ETHUSDT:
+      - 1200
+      - 1250
+
+  pairs: local
+    # - BTC
+    # - ETH
+
+Telegram:
+  users:
+    sumit: 1443973207
+    kuniyo: 1138730714
+
+  bot: 
+    p: 1484269540:AAGeVHH_M-ARL4GJDtQ-Snu8shp717VQQ4c
+    k: 1476137551:AAFHXuxExb3Vno0J3v18hPXJ71Dj3EPXxUA

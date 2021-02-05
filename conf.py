@@ -1,58 +1,73 @@
 import os
-import telegram
+import sys
 import yaml
-from telegram.ext import Updater 
-from binance.client import Client
-from binance_f import RequestClient as Fut
-from binance_f.base.printobject import *
+import _log
+from loguru import logger
 
+# import pymongo
+# from pymongo.database import Database
+import telegram
+from telegram.ext import Updater
+from binance.client import Client
+from unicorn_binance_websocket_api.unicorn_binance_websocket_api_manager import BinanceWebSocketApiManager as wsapi
 
 class Configuration():
 
-    def __init__(self):
+    def __init__(self) -> None:
+        cFile = os.path.join('userdata', 'config', 'config.yml')
+        self.config = self.conf(cFile)
 
-        with open('userData/config/config.yml', 'r') as config_file:
-            default_config = yaml.load(config_file)
 
-        if os.path.isfile('defaults.yml'):
-            with open('config.yml', 'r') as config_file:
-                user_config = yaml.load(config_file)
-        else:
-            user_config = dict()
+    @logger.catch
+    def conf(self, cFile=None) -> None:
 
-        self.settings = default_config['Settings']
-        self.Telegram = default_config['Telegram']
-        self.bot = {k: telegram.Bot(token=v) for k, v in self.Telegram['bots'].items()}
+        with open(cFile, 'r') as config_file:
+            default_config = yaml.load(config_file, Loader=yaml.FullLoader)
 
-        if 'scrips' in self.settings:
-            self.scrips = self.settings['scrips']
+        log = default_config['log']
+        self._log = _log.setup_logging(log)
+        # self._dburl = default_config['data']['_dburl']
+        # self.mongoSync = pymongo.MongoClient(self._dburl)
+        # self._db: Database = self.mongoSync.scrip
+
+        logger.configure(**self._log)
+        logger.info('👋≧◉ᴥ◉≦ Greetings maSter')
+        logger.info('init vars')
+        self._datadir = default_config['data']['_datadir']
+        self._stratdir = default_config['data']['_stratdir']
+        self.creds: list = [default_config['exchange']['binance']['api'], default_config['exchange']['binance']['secret']]
+
+        self.exchange: Client = Client(*self.creds)
+        self.ws = wsapi(exchange=default_config['exchange']['ws'], output_default='dict')
+        self._cex = self.exchange
+        logger.debug(f'-- BinanceExchange {self._cex}')
+
         
-        if 'stratsFolder' in self.settings: 
-            self.stratFolder = self.settings['stratsFolder']
-            self.stratFolder = self.stratFolder.replace('/', '.')
+        
+        self.updater: Updater = Updater(token=default_config['Telegram']['bot']['p'], use_context=True)
+        self.updater_: Updater = Updater(token=default_config['Telegram']['bot']['k'], use_context=True)
+        self.bot: telegram.bot = self.updater.bot
+        self._Tusers: dict = default_config['Telegram']['users']
+        logger.debug(f'-- Telegram, ')
 
+        self.pairs:list = default_config['alerts']['pairs']
+        if self.pairs is 'local':
+            self.pairs = [mc.split('USDT')[0] for mc in os.listdir(self._datadir)]
+            #!regex split
+        logger.debug(f'-- pairs: {self.pairs}')
 
-        if 'Exchange' in default_config:
-            self.Exchange = default_config['Exchange']['binance']
-            
-            if 'api' and 'secret' in self.Exchange:
-                self.FutClient = Fut(api_key=self.Exchange['api'], secret_key=self.Exchange['secret'])
-                self.SpotClient = Client(self.Exchange['api'], self.Exchange['secret'])
-            
-            if self.FutClient:
-                # self.FutSymbols = self.FutClient.get_exchange_information()
-                # self.FutSymbols = self.FutSymbols.symbols
-                # self.FutSymbols = set([sym.symbol for sym in self.FutSymbols])
-                self.FutSymbols = {}
+        
+        self.prizes: dict = default_config['alerts']['price']
+        logger.debug(f'-- Prize alerts: {self.prizes}')
 
-        if 'Strats' in default_config:
-            self.modclass = {k: v for k,v in default_config['Strats'].items()}
-            mod = __import__(self.stratFolder, fromlist=self.modclass.keys())
-            self.Strats = {strat : getattr(getattr(mod, strat), strat) for strat in self.modclass.keys()}
+        
+        self.strategiesList: list = default_config['alerts']['strategies']
+        if self.strategiesList is 'all':
+            self.strategiesList = [mc.split('.')[0] for mc in os.listdir(self._stratdir) if not mc.startswith('__')]
+        logger.debug(f'-- strats: {self.strategiesList}')
+        
+        mod = __import__(self._stratdir.replace('/', '.'), fromlist=self.strategiesList)
+        self.Strats = {strat : getattr(getattr(mod, strat), strat)() for strat in self.strategiesList}
+        logger.info('Done loading vars!')
 
-
-
-if __name__ == "__main__":
-    c = Configuration()
-    obj = c.Strats['MA']
-    print(obj.stoploss)
+        return default_config
